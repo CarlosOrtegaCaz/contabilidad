@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <script src="scripts/angular.min.js"></script>
+  <script src="scripts/main.js"></script>
+  <script src="scripts/angular-animate.min.js"></script>
+  <script src="scripts/angular-touch.min.js"></script>
+  <script src="scripts/ui-bootstrap-tpls-2.5.0.min.js"></script>
+  <script src="scripts/jquery.min.js"></script>
+  <script src="scripts/bootstrap.min.js"></script>
+  <script src="scripts/highcharts.js"></script>
+  <link rel="stylesheet" href="css/master.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <title>Contabilidad</title>
+</head>
+
+<body>
+  <div ng-app="Contabilidad" ng-controller="conta">
+    <div class="container">
+      <div class="jumbotron">
+        <h1 class="text-center"> <span class="infoBlack"> Saldo actual:</span>
+          <span ng-class="iClass"> {{saldoActual | currency }}</span></h1>
+        <h3 class="text-center"> <span class="infoGreen">{{sumaIngresos() | currency}}</span>
+           - <span class="infoRed">{{sumaEgresos() | currency}}</span></h3>
+      </div>
+
+      <uib-tabset active="activeJustified" justified="true">
+        <uib-tab index="0" heading="Ingresos">
+          <button type="button" class="btn btn-info btn-lg agregar" title="Agrega un nuevo Ingreso"
+           data-toggle="modal" data-target="#myModal">+</button>
+
+          <!-- Modal -->
+          <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Agregar Ingreso</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Selecciona una categoria.</p>
+                <select class="form-control" ng-model="nuevoIngreso.categoria" ng-options="c for c in categoriaIngresos">
+                  </select>
+                  <p>Fecha</p>
+                  <input type="date" ng-model="nuevoIngreso.fecha" class="form-control">
+                  <p>Cantidad</p>
+                  <input type="number" ng-model="nuevoIngreso.cantidad" min="0" required class="form-control">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="agregarIngreso()">Agregar</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+              </div>
+              <!--End Modal -->
+
+            </div>
+          </div>
+          <div ng-if="ingresos.length" class="">
+            <table class="table-hover table">
+              <thead>
+                <tr>
+                  <th>Categoria</th>
+                  <th>Fecha</th>
+                  <th>Cantidad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="reg in ingresos track by $index">
+                  <td>{{reg.categoria}}</td>
+                  <td>{{reg.fecha | date}}</td>
+                  <td>{{reg.cantidad | currency}}</td>
+                  <td class="text-center"><button type="button" class="btn btn-danger" ng-click="borrarIngreso($index)">Borrar</button> </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="text-center" ng-if="!ingresos.length">
+            <p>Vacio</p>
+          </div>
+        </uib-tab>
+
+<!--egresos -->
+        <uib-tab index="1" heading="Egresos">
+          <button type="button" class="btn btn-info btn-lg agregar" title="Agrega un nuevo Egreso"
+           data-toggle="modal" data-target="#myModal2">+</button>
+
+          <!-- Modal -->
+          <div id="myModal2" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Agregar Egreso</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Selecciona una categoria.</p>
+                <select class="form-control" ng-model="nuevoEgreso.categoria" ng-options="c for c in categoriaEgresos">
+                  </select>
+                  <p>Fecha</p>
+                  <input type="date" ng-model="nuevoEgreso.fecha" value="" class="form-control">
+                  <p>Cantidad</p>
+                  <input type="number" ng-model="nuevoEgreso.cantidad" min="0" required class="form-control">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="agregarEgreso()">Agregar</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+              </div>
+              <!--End Modal -->
+
+            </div>
+          </div>
+          <div ng-if="egresos.length" class="">
+            <table class="table-hover table">
+              <thead>
+                <tr>
+                  <th>Categoria</th>
+                  <th>Fecha</th>
+                  <th>Cantidad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="reg in egresos track by $index">
+                  <td>{{reg.categoria}}</td>
+                  <td>{{reg.fecha | date}}</td>
+                  <td>{{reg.cantidad | currency}}</td>
+                  <td class="text-center"><button type="button" class="btn btn-danger" ng-click="borrarEgreso($index)">Borrar</button> </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="text-center" ng-if="!egresos.length">
+            <p>Vacio</p>
+          </div>
+        </uib-tab>
+        <uib-tab index="2" heading="Graficas" ng-click="chart()">
+
+          <div id="container" style="width:100%; height:400px;"></div>
+          <div id="container2" style="width:100%; height:400px;"></div>
+        </uib-tab>
+      </uib-tabset>
+    </div>
+  </div>
+
+</body>
+
+</html>

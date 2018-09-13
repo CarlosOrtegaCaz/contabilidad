@@ -1,0 +1,30 @@
+.agregar {
+  float: right;
+  margin: 30px 9%;
+}
+
+.jumbotron {
+  background-image:  url(../img/back5.jpg);
+  background-position: center;
+  background-size: cover;
+  text-shadow: white 0px 0px 1px;
+  background-color: white;
+}
+
+.infoBlack{
+  color: black !important;
+}
+.infoRed{
+  color: red !important;
+}
+.infoGreen{
+  color: green !important;
+}
+
+.infoOrange{
+  color: orange !important;
+}
+
+.form-control {
+  margin-bottom: 15px;
+}
